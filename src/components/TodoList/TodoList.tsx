@@ -1,11 +1,19 @@
 import { TodoInfo } from '../TodoInfo';
 
-interface Todo {
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+};
+
+type Todo = {
   id: number;
   title: string;
   completed: boolean;
   userId: number;
-}
+  user: User | undefined;
+};
 
 interface TodoListProps {
   todos: Todo[];

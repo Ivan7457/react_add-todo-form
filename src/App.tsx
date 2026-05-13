@@ -11,10 +11,15 @@ export const App = () => {
   const [userError, setUserError] = useState(false);
   const [title, setTitle] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
-  const [todos, setTodos] = useState(todosFromServer);
+  const [todos, setTodos] = useState(
+    todosFromServer.map(todo => ({
+      ...todo,
+      user: usersFromServer.find(user => user.id === todo.userId),
+    })),
+  );
 
   const getUser = (userId: number) => {
-    return usersFromServer.find(u => u.id === userId);
+    return usersFromServer.find(user => user.id === userId);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,7 +38,7 @@ export const App = () => {
     }
 
     const newTodo = {
-      id: Math.max(...todos.map(t => t.id), 0) + 1,
+      id: Math.max(...todos.map(todo => todo.id), 0) + 1,
       title: title.trim(),
       userId: Number(selectedUser),
       completed: false,
@@ -61,16 +66,19 @@ export const App = () => {
 
       <form action="/api/todos" method="POST" onSubmit={handleSubmit}>
         <div className="field">
+          <label htmlFor="todo-title">Title:</label>
           <input
             type="text"
             data-cy="titleInput"
             value={title}
             onChange={handleTitleChange}
+            placeholder="Enter a title"
           />
           {titleError && <span className="error">Please enter a title</span>}
         </div>
 
         <div className="field">
+          <label htmlFor="todo-title">User:</label>
           <select
             data-cy="userSelect"
             value={selectedUser}

@@ -1,11 +1,18 @@
 import { UserInfo } from '../UserInfo';
-import usersFromServer from '../../api/users';
+
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+};
 
 type Todo = {
   id: number;
   title: string;
   completed: boolean;
   userId: number;
+  user: User | undefined;
 };
 
 interface TodoInfoProps {
@@ -13,8 +20,6 @@ interface TodoInfoProps {
 }
 
 export const TodoInfo = ({ todo }: TodoInfoProps) => {
-  const user = usersFromServer.find(u => u.id === todo.userId);
-
   return (
     <article
       key={todo.id}
@@ -22,7 +27,7 @@ export const TodoInfo = ({ todo }: TodoInfoProps) => {
       className={`TodoInfo ${todo.completed ? 'TodoInfo--completed' : ''}`}
     >
       <h2 className="TodoInfo__title">{todo.title}</h2>
-      {user && <UserInfo user={user} />}
+      {todo.user && <UserInfo user={todo.user} />}
     </article>
   );
 };
